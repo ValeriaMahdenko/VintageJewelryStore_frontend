@@ -9,10 +9,6 @@ export class Home extends Component {
   constructor(props) {
     super(props);
     this.state = { Products: [], Search: "", Sort: "", Page: "1"};
-    /*localStorage.setItem("IsLogin", false);
-    localStorage.setItem("Token", "");
-    localStorage.setItem("Id", 0);
-    localStorage.setItem("IsAdmin", false)*/
   }
 
   
@@ -32,7 +28,6 @@ export class Home extends Component {
   componentDidMount()
   {
     this.GetProducts();
-    this.GetUserToken();
   }
   
   GetUserToken()
@@ -56,7 +51,6 @@ export class Home extends Component {
         url += "&search=" + document.getElementById("searchfield").value;
     }*/
     
-    console.log(this.state.Sort);
     axios.get(`http://127.0.0.1:8000/products/?search=${this.state.Search}&page=${this.state.Page}&ordering=${this.state.Sort}`).then(response => this.setState({
       Products: response.data.results
     }));
@@ -106,8 +100,8 @@ export class Home extends Component {
 
   render () {
     return (
-
       <div>
+
       <div class="post-container">
 		Sort:
 		<select id="selectid" name="selectsort" onChange={e => {this.setSort(e.target.value); this.GetProducts()} } >
