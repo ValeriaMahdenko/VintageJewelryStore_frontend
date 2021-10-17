@@ -29,30 +29,25 @@ export class Account extends Component {
     this.setState({ Name: n})
   }
 
-  setCounty(c)
-  {
+  setCounty(c){
       this.setState({Country: c})
   }
 
+  setSurname(s){
+    this.setState({Surname: s})
+  }
 
-  /*setEmail(em ) {
-    this.setState({ Email: em})
+  setPhone(p){
+    this.setState({Phone: p})
   }
-  
-  setPassword(pass ) {
-    this.setState({ Password: pass})
+
+  setCity(c){
+    this.setState({City: c})
   }
-  setEmail(em ) {
-    this.setState({ Email: em})
+
+  SetStreet(s){
+    this.setState({Street: s})
   }
-  setPassword(pass ) {
-    this.setState({ Password: pass})
-  }
-  setEmail(em ) {
-    this.setState({ Email: em})
-  }*/
-  
-  
 
   Update(e)
   {
@@ -66,15 +61,6 @@ export class Account extends Component {
         "street": this.state.Street,
         "phone": this.state.Phone},
       { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`}}
-
-
-        /*{"country": this.state.Country,
-        "first_name": this.state.Name,
-        "last_name": this.state.Surname,
-        "email": this.state.Email,
-        "city": this.state.City,
-        "street": this.state.Street,
-        "phone": this.state.Phone}*/
     )
   }
 
@@ -104,25 +90,25 @@ export class Account extends Component {
                         <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control" value={this.state.Name} onChange={e=> this.setName(e.target.value)}
                                 placeholder="Name"/></div>
                         <div class="col-md-6"><label class="labels">Surname</label><input type="text"
-                                class="form-control" value={this.state.Surname} placeholder="Surname"/></div>
+                                class="form-control" value={this.state.Surname} onChange={e=> this.setSurname(e.target.value)}placeholder="Surname"/></div>
                     </div>
                     <div class="row mt-3">
                         <label class="labels">Phone</label><input type="text"
-                                class="form-control" value={this.state.Phone} placeholder="Phone number"/>
+                                class="form-control" value={this.state.Phone} onChange={e=> this.setPhone(e.target.value)} placeholder="Phone number"/>
                         <label class="labels">Country</label>
                         <select name="UserCountry" class="form-control" onChange={e=> this.setCounty(e.target.value)}>
-                                <option value={this.state.Country}>(Please select a country)</option>
+                                <option>{this.state.Country}</option>
                                 <option value="UA">Ukraine</option>
                                 <option value="PL">Poland</option>
                                 <option value="CZ">Czech Republic</option>
                                 <option value="AS">Hungary</option>
                         </select> <br></br>
                         <label class="labels">City</label><input type="text"
-                                class="form-control" value={this.state.City} placeholder="City"/>
+                                class="form-control" value={this.state.City} onChange={e=> this.setCity(e.target.value)} placeholder="City"/>
                         <label class="labels">Street</label><input type="text"
-                                class="form-control" value={this.state.Street} placeholder="Street"/>
+                                class="form-control" value={this.state.Street} onChange={e=> this.SetStreet(e.target.value)}placeholder="Street"/>
                         <label class="labels">Email</label><input type="text"
-                                class="form-control" value={this.state.Email} placeholder="Email" />
+                                class="form-control" value={this.state.Email} onChange={e=> this.setName(e.target.value)}placeholder="Email" />
                     </div>
                     <div class="mt-5 text-right">
                         <button class="btn-primary text-right" type="button" onClick={e=> this.Update(e)}> Update </button>
