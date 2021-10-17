@@ -10,6 +10,9 @@ header {
   box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.5);
 }
 
+p{
+  color: black;
+}
 #footer {
   position: fixed;
   padding: 10px 10px 0px 10px;
@@ -177,6 +180,13 @@ h3 {
   text-align: right;
 }
 
+.card-description{
+  color: black;
+}
+.card-amount
+{
+  color:black;
+}
 #profile-photo {
   float: left;
   max-width: 300px;

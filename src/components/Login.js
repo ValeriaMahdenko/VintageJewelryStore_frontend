@@ -9,9 +9,6 @@ export class Login extends Component {
   constructor(props) {
     super(props);
     this.state = { Email: "", Password: ""};
-
-    //console.log(localStorage["Token"]);
-    //console.log(localStorage["IsLogin"]);
   }
 
   setEmail(em ) {
@@ -29,32 +26,6 @@ export class Login extends Component {
       )
   }
   
-  /*componentDidUpdate()
-  {
-    //console.log("not if");
-    if(localStorage["Reload"]){
-      //console.log("if");
-      //document.getElementById("log").click();
-      localStorage.setItem('Reload', false);
-      
-      document.location.reload();
-
-    }
-  }
-
-  Signin(e){
-    localStorage.clear();
-    e.preventDefault();
-      axios.post("http://127.0.0.1:8000/users/login/", {
-        "email": this.state.Email,
-        "password": this.state.Password,
-    }).then(response => {localStorage.setItem("Token", response.data.access); localStorage.setItem("IsLogin", true)})
-
-    localStorage.setItem('Reload', true);
-    //console.log(localStorage["Reload"]);
-    this.forceUpdate();
-    //console.log("after force");
-  }*/
   Signin(e)
   {
     e.preventDefault();
@@ -74,6 +45,21 @@ export class Login extends Component {
       this.props.history.push("/")
       document.location.reload();
     })
+
+    axios.get("http://127.0.0.1:8000/orders/", { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`} }
+      ).then(response => {
+        response.data.results.forEach(element => {
+          if(element.status === "Opened")
+          {
+            console.log(element.id);
+
+            localStorage.setItem("IdOrder", element.id)
+          }
+
+        });
+      }
+    )
+
   }
 
   render () {
