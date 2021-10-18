@@ -12,9 +12,18 @@
   resize: vertical;
 }
 
+.NewItem label{
+  color: black;
+}
+
+.NewItem p{
+  color: black;
+}
+
 .NewItem h3{
     width: 100px;
 }
+
 .NewItem input[type=submit] {
   background-color: #04AA6D;
   color: white;

@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import './style/newitem.css'
+import axios from "axios";
+import swal from "sweetalert";
+import FormData from 'form-data'
 
 export class NewItem extends Component {
   static displayName = NewItem.name;
 
   constructor(props) {
     super(props);
-    this.state = { Name: "", BrandName: "", Material: "", Price: "", Amount: "", Description: "", Image: [] }
+    this.state = { Name: "", BrandName: "", Material: "", Price: "", Amount: "", Description: "", Images: [] }
 
   };
-
   
   setName(n ) {
     this.setState({ Name: n})
@@ -35,16 +37,58 @@ export class NewItem extends Component {
     this.setState({ Description: d})
   }
 
-  AddItem(e)
-  {
-    e.preventDefault();
+  setImages(i ) {
+    console.log(i);
+    this.setState({ Images: i})
   }
 
-  /*setImage(i ) {
-    console.log(i);
-    this.setState({ image: i})
-  }*/
-//value={this.state.Image} onChange={e=> this.setImage(e.target.value)}
+AddItem(e){
+  e.preventDefault();
+  var headers= {
+      "Content-Type": "multipart/form-data",
+      "Authorization" : `Bearer ${localStorage["Token"]}`
+    };
+
+  var formData = new FormData();
+  formData.append("name", this.state.Name);
+  formData.append("brand_name", this.state.BrandName);
+  formData.append("description", this.state.Description);
+  formData.append("material", this.state.Material);
+  formData.append("amount", this.state.Amount);
+  formData.append("price", this.state.Price);
+
+  for(var i of document.getElementById("files").files)
+  {
+    formData.append("image", i);
+  }
+  
+  for(var pair of formData.entries()) {
+    console.log(pair[0]+', '+pair[1]);
+  } 
+
+  axios.post(" http://127.0.0.1:8000/refresh_products/", formData,
+  { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`, "Content-Type": "multipart/form-data"}
+  }).then(function(response) {
+    swal({
+      title: "Success",
+      text: "You have created a new item! We can watch this in main page.",
+      icon: "success",
+      button: "OK"
+    });
+    
+
+    //this.props.history.push("/");
+    console.log(response);
+  })
+  .catch(function(response) {
+    swal({
+      title: "Error",
+      text: `${response}`,
+      icon: "error",
+      button: "Try again"
+    });
+  });
+};
 
 
   render () {
@@ -52,6 +96,7 @@ export class NewItem extends Component {
       <div className="NewItem">
       <h3>New item</h3>
       <div class="container">
+        <form enctype="multipart/form-data">
             <label for="name">Name</label>
             <input type="text" id="name" name="Name" value={this.state.Name} onChange={e=> this.setName(e.target.value)} placeholder="Name" required/>
 
@@ -72,10 +117,11 @@ export class NewItem extends Component {
 
             <p>
                 Please, upload images (max 3):
-                <input type="file" name="dataimage" size="40"  accept=".jpg, .jpeg, .png" multiple/>
+                <input type="file" id="files" name="dataimage" size="40"  accept=".jpg, .jpeg, .png"  onChange={e=> this.setImages(e.target.value)} multiple/>
             </p>
 
-            <input type="submit" value="Add item"/>
+            <input type="submit" value="Add item" onClick={e=>this.AddItem(e)}/>
+          </form>
 
     </div>
     </div>
