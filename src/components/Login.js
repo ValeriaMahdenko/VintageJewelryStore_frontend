@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { Redirect, useHistory } from 'react-router';
 import './style/login.css'
+import $ from 'jquery'; // <-to import jquery
 
 export class Login extends Component {
   static displayName = Login.name;
@@ -29,37 +30,40 @@ export class Login extends Component {
   Signin(e)
   {
     e.preventDefault();
-    axios.post("http://127.0.0.1:8000/users/login/", {
-        "email": this.state.Email,
-        "password": this.state.Password,
-    }).then(response => {
-      const token = response.data.access;
-      const IsLogin = true;
-
-      localStorage.setItem('Token', token);
-      localStorage.setItem('IsLogin', IsLogin);
-
-      console.log(localStorage['Token']);
-      console.log(localStorage['IsLogin']);
-
-      this.props.history.push("/")
-      document.location.reload();
-    })
-
-    axios.get("http://127.0.0.1:8000/orders/", { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`} }
-      ).then(response => {
-        response.data.results.forEach(element => {
-          if(element.status === "Opened")
-          {
-            console.log(element.id);
-
-            localStorage.setItem("IdOrder", element.id)
-          }
-
-        });
-      }
-    )
-
+    var data_ = { "email": this.state.Email, 
+             "password": this.state.Password}
+     console.log("in3")
+    $.ajax({
+      type: "post",
+      url: "http://127.0.0.1:8000/users/login/",
+      data: data_,
+      success: function (data) {
+        const token = data.access;
+        const IsLogin = true;
+  
+        localStorage.setItem('Token', token);
+        localStorage.setItem('IsLogin', IsLogin);
+  
+        console.log(localStorage['Token']);
+        console.log(localStorage['IsLogin']);          
+          $.ajax({
+              type: "get",
+              url: "http://127.0.0.1:8000/orders/",
+              headers: {"Authorization" : `Bearer ${localStorage["Token"]}`},
+              success: function (data) {
+                data.results.forEach(element => {
+                  if(element.status === "Opened")
+                  {
+                    localStorage.setItem('IdOrder', element.id);
+                    console.log(localStorage['IdOrder'])                  
+                  }
+                });
+              }
+            });
+        }
+    });
+    this.props.history.push("/")
+    document.location.reload();
   }
 
   render () {
@@ -79,7 +83,7 @@ export class Login extends Component {
             <input type="Password" name="Pass" id="Pass" value={this.state.Password} onChange={e=>this.setPassword(e.target.value)} placeholder="Password"/>
 
             <br></br>
-            <button type="button" name="log" id="log" onClick={e => this.Signin(e)} >Log in</button>
+            <button type="button" name="log" id="log" onClick={e => {e.preventDefault();this.Signin(e)}} >Log in</button>
             
             <br></br>
             </form>
