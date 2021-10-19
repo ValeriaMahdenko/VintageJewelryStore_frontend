@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import './style/cart.css'
+import $ from 'jquery'; // <-to import jquery
+import { isJSDocThisTag } from 'typescript';
 
 export class Cart extends Component {
   static displayName = Cart.name;
@@ -18,40 +20,18 @@ export class Cart extends Component {
 
   componentDidMount()
   {
-      console.log(this.state.Products)
-      axios.get(`http://127.0.0.1:8000/orders/${localStorage["IdOrder"]}/`, { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`} }
-      ).then(response => {
-          this.setState({
-              Products: response.data.selected_products,
-              Price: response.data.total_price
-          })
-      });
-
-    this.forceUpdate();
-    this.WatchProducts();
-    console.log(localStorage["IdOrder"])
+    axios.get(`http://127.0.0.1:8000/orders/${localStorage["IdOrder"]}/`, { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`} }
+    ).then(response => {
+        this.setState({
+            Products: response.data.selected_products,
+            Price: response.data.total_price
+        })
+        this.WatchProducts();
+    });
   }
- 
-  /*componentDidUpdate(prevProps)
-  {
-      if(this.props.Products !== prevProps.Products)
-      {
-          this.WatchProducts();
-      }
-      else{
-      }
-  }*/
 
   WatchProducts()
   {
-    axios.get(`http://127.0.0.1:8000/orders/${localStorage["IdOrder"]}/`, { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`} }
-      ).then(response => {
-          this.setState({
-              Products: response.data.selected_products,
-              Price: response.data.total_price
-          })
-      });
-      
     console.log("in")
     document.getElementById("Cart-Items").innerHTML="";
     this.state.Products.forEach((element) => {
@@ -69,6 +49,7 @@ export class Cart extends Component {
         amount.innerText = this.state.Product_price
 
         var button = document.createElement("button")
+        button.setAttribute("class", "remove")
         button.innerText = "Remove"
 
         var prices = document.createElement("div")
@@ -81,9 +62,13 @@ export class Cart extends Component {
 
         var img = document.createElement("img")
         img.setAttribute("src", this.state.Product_image)
-        img.setAttribute("height", "120px")
+        img.setAttribute("height", "200px")
 
-        document.getElementById('Cart-Items').append(img, h, prices)
+        var item = document.createElement("div")
+        item.setAttribute("class", "Cart-Item")
+        item.append(img, h, prices)
+
+        document.getElementById('Cart-Items').append(item)
     })
     
   })
@@ -93,18 +78,19 @@ export class Cart extends Component {
   render () {
     return (
       <div className="Cart">
-      <div class="Cart-Container">
+      <div class="Container">
 
         <div class="Header">
             <h3 class="Heading">Shopping Cart</h3>
         </div>
-        <div class="Cart-Items" id="Cart-Items"></div>
+        <div class="Cart-Items" id="Cart-Items">
+        </div>
 
         <div class="checkout">
             <div class="total">
                 <div>
                     <div class="Subtotal">Sub-Total</div>
-                    <div class="items">2 items</div>
+                    <div class="items">{this.state.Products.length} items</div>
                 </div>
                 <div class="total-amount">{this.state.Price}</div>
             </div>
