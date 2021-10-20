@@ -115,9 +115,13 @@ export class Account extends Component {
                     </div>
                 </div>
             </div>
-            
+            <div class="col-md-4">
+              <div class="p-3 py-5">
+                {this.state.IsAdmin && <button class="btn-primary text-right" onClick={ e => { e.preventDefault(); this.props.history.push("/add")}}>ADD</button>}
+                {!this.state.IsAdmin && <button class="btn-primary text-right" onClick={ e => { e.preventDefault(); this.props.history.push("/shopList")}}>Shopping list</button>}
+              </div>
+            </div>
         </div>
-        {this.state.IsAdmin && <button onClick={ e => { e.preventDefault(); this.props.history.push("/add")}}>ADD</button>}
     </div>
     </div>
     );

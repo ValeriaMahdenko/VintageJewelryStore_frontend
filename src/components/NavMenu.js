@@ -27,14 +27,12 @@ export class NavMenu extends Component {
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
                 </NavItem>
-
-
+                
+                {
+                localStorage["IsLogin"] ? <div class="head"> 
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/cart">Cart</NavLink>
                 </NavItem>
-                
-                {
-                localStorage["IsLogin"] ? <div> 
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/account">Account</NavLink>
                 </NavItem>

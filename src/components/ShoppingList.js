@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-//import './style/cart.css'
+import './style/shoplist.css'
 import $ from 'jquery'; // <-to import jquery
 import { isJSDocThisTag } from 'typescript';
 import swal from "sweetalert";
@@ -11,55 +11,52 @@ export class ShoppingList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      Products: [],
+      IdOrder: 0,
       Price: 0,
-      Info: []     
+      Orders : []     
     };
   }
   componentDidMount()
   {
-    axios.get("http://127.0.0.1:8000/orders/",
+    axios.get("http://127.0.0.1:8000/orders/?ordering=-id",
     {headers: {"Authorization" : `Bearer ${localStorage["Token"]}`}})
     .then(response => {
+      var result = "";
       response.data.results.forEach(element => {
         if(element.status === "Completed")
         {
           this.setState({
-            Products: element.selected_products,
+            IdOrder: element.id,
             Price: element.total_price
           })                 
+        
+        this.state.Orders.push({
+          'Id': this.state.IdOrder,
+          'Price': this.state.Price,
+        })
+        result = "";
+        this.state.Orders.map((el) =>(
+          result += `
+          <div class="product-grid2">
+              <div class="product-image"> <img src="https://cdn1.iconfinder.com/data/icons/e-commerce-and-shopping-10/64/e-commerce_shopping_order_completed-512.png"/> 
+              </div>
+              <div class="product-content">
+                  <h3 class="title">
+                  <a href="#">Order №${el.Id}</a>
+                  </h3> 
+                  <span class="price">${el.Price} $</span>
+              </div>
+          </div>`
+        ))
         }
-        this.DetailProduct()
       });
-    
+      if(this.state.Orders.length == 0) result += "<h2>You have no confirmed orders</h2>"
+      document.getElementById("List-Items").innerHTML = result;
     });
   }
-
-  DetailProduct()
-  { 
-    var dc =[]
-    console.log(this.state.Products)
-    this.state.Products.forEach((element) => {
-      axios.get(`http://127.0.0.1:8000/products/${element.product}/`).then(response => {
-          dc.push({
-            "Name": response.data.name,
-            "Image": response.data.images[0].image,
-            "Price": response.data.price
-          })
-        })
-    })
-
-    var d = {
-      "Price": this.state.Price,
-      "Products": dc,
-    }
-    this.state.Info.push(d)
-  }
-
-
+  
   render () {
-    {console.log(this.state.Info)}
-
+    {console.log(this.state.Orders)}
     return (
       <div className="ShopList">
       <div class="Container">
@@ -68,11 +65,10 @@ export class ShoppingList extends Component {
             <h3 class="Heading">Shopping List</h3>
         </div>
         <div class="List-Items" id="List-Items">
-          {}
+              
+            </div>           
+          </div>
         </div>
-
-    </div>
-    </div>
     );
   }
 }

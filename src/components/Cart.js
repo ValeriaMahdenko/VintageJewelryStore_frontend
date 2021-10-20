@@ -22,14 +22,16 @@ export class Cart extends Component {
 
   componentDidMount()
   {
-    axios.get(`http://127.0.0.1:8000/orders/${localStorage["IdOrder"]}/`, { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`} }
-    ).then(response => {
-        this.setState({
-            Products: response.data.selected_products,
-            Price: response.data.total_price
-        })
-        this.WatchProducts();
-    });
+    if(localStorage['IdOrder']){
+      axios.get(`http://127.0.0.1:8000/orders/${localStorage["IdOrder"]}/`, { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`} }
+      ).then(response => {
+          this.setState({
+              Products: response.data.selected_products,
+              Price: response.data.total_price
+          })
+          this.WatchProducts();
+      });
+    }
   }
 
   RemoveProduct(e)

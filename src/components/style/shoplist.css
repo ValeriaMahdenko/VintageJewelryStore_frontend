@@ -1,0 +1,24 @@
+img{
+    width:25%;
+    vertical-align:middle;
+    margin-right:30px;
+    float: left;
+}
+
+.product-content{
+    float: left;
+}
+h3{
+    margin-top: 10px;
+}
+
+.product-grid2
+{
+    margin-bottom: 10px;
+    clear: left;
+    border-bottom: black;
+}
+.List-Items
+{
+    margin-bottom: 25px;
+}
