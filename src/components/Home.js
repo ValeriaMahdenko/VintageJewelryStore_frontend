@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { Component } from "react";
 import "./style/home.css";
-import $ from 'jquery'; // <-to import jquery
+import $, { data } from 'jquery'; // <-to import jquery
 import 'bootstrap';
+import swal from "sweetalert";
 
 
 export class Home extends Component {
@@ -11,6 +12,7 @@ export class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      OrderProducts: [],
       Products: [],
       Loading: false,
       Page: 1,
@@ -21,6 +23,18 @@ export class Home extends Component {
 
 
   componentDidMount() {
+
+    if(localStorage['IsLogin'] && localStorage['IdOrder']){
+      console.log("yes")
+      axios.get(`http://127.0.0.1:8000/orders/${localStorage["IdOrder"]}/`, { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`} }
+      ).then(response => {
+          this.setState({
+            OrderProducts: response.data.selected_products,
+          })
+
+      });
+    }
+
     this.getProducts(this.state.Page);
 
     var options = {
@@ -45,12 +59,11 @@ export class Home extends Component {
         this.getProducts(curPage);
         this.setState({ Page: curPage });
       } else {
-        console.log("stop");
       }
     }
     this.setState({ PrevY: y });
   }
-  
+
   addEventListeners()  {
     $('#productInfoModal').on('show.bs.modal', event => {
       const button = $(event.relatedTarget); // Button that triggered the modal
@@ -67,6 +80,7 @@ export class Home extends Component {
           .data('id', id);
     })};
 
+  
 
   getProducts(page) {
     this.setState({ Loading: true });
@@ -98,6 +112,86 @@ export class Home extends Component {
       this.addEventListeners();
 
   }
+
+  AddToCart(e)
+  {
+    e.preventDefault();
+    console.log(localStorage['IsLogin'])
+    if(localStorage['IsLogin']){
+      console.log("yes")
+      var dataID = parseInt(e.target.getAttribute("data-id"));     
+      if(localStorage['IdOrder']){
+        console.log(localStorage['IdOrder'])
+        var d = this.state.OrderProducts
+        d.push({"product": dataID,
+                "amount_selected": 1})
+        console.log(d)
+
+        axios.put(`http://127.0.0.1:8000/orders/${localStorage['IdOrder']}/`, 
+        {
+          "status": "Opened",
+          "selected_products": d,
+        },
+        { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`}})
+        .then(function(response) {
+          swal({
+            title: "Success",
+            text: "You have addeed a new item to your cart! We can watch this in cart.",
+            icon: "success",
+            button: "OK"
+          });})
+        .catch(function(response) {
+          console.log(response);
+          swal({
+            title: "Error",
+            text: "Not enough units of this product",
+            icon: "error",
+            button: "Try again"
+          });
+        });
+      }
+      else{
+
+        axios.post("http://127.0.0.1:8000/orders/", 
+        {
+          "status": "Opened",
+          "selected_products": [{
+            "product": dataID,
+            "amount_selected": 1
+          }],
+        },
+        { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`,}})
+        .then(function(response) {
+          swal({
+            title: "Success",
+            text: "You have addeed a new item to your cart! We can watch this in cart.",
+            icon: "success",
+            button: "OK"
+          });
+
+          console.log(response)
+          localStorage.setItem("IdOrder", response.data.id)
+        }).catch(function(response) {
+          swal({
+            title: "Error",
+            text: `${response}`,
+            icon: "error",
+            button: "Try again"
+          });
+        });
+      }
+    }
+    else{
+      console.log("no")
+      swal({
+        title: "Try again",
+        text: "You must log in first!",
+        icon: "info",
+        button: "Try again"
+      });
+    }
+  }
+
 
   render() {
     // Additional css
@@ -133,7 +227,7 @@ export class Home extends Component {
                   <p class="card-text">{element.description}</p>
                   <button class="btn btn-primary info" data-toggle="modal" data-target="#productInfoModal" data-id={element.id} 
                   >Info</button>
-                  <button class="btn btn-primary buy" data-id={element.id}>
+                  <button class="btn btn-primary buy" data-id={element.id} onClick={e=> this.AddToCart(e)}>
                     {element.price} - Buy
                   </button>
                 </div>
@@ -165,9 +259,6 @@ export class Home extends Component {
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
                   Close
-                </button>
-                <button class="btn btn-primary buy" data-id="id">
-                  Buy
                 </button>
               </div>
             </div>

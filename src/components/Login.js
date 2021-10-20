@@ -29,6 +29,7 @@ export class Login extends Component {
   
   Signin(e)
   {
+    var self = this;
     e.preventDefault();
     var data_ = { "email": this.state.Email, 
              "password": this.state.Password}
@@ -58,12 +59,13 @@ export class Login extends Component {
                     console.log(localStorage['IdOrder'])                  
                   }
                 });
+                self.props.history.push("/")
+                document.location.reload();
               }
             });
         }
     });
-    this.props.history.push("/")
-    document.location.reload();
+    
   }
 
   render () {
