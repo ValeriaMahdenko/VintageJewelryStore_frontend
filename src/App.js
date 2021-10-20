@@ -8,7 +8,7 @@ import { Register } from './components/Register';
 import { Account } from './components/Account';
 import { Cart } from './components/Cart';
 import { NewItem } from './components/NewItem';
-
+import {ShoppingList} from './components/ShoppingList';
 
 import './custom.css'
 
@@ -25,6 +25,7 @@ export default class App extends Component {
         <Route path='/account' component={Account} />
         <Route path='/cart' component={Cart} />
         <Route path='/add' component={NewItem} />
+        <Route path='/shoplist' component={ShoppingList} />
 
 
       </Layout>

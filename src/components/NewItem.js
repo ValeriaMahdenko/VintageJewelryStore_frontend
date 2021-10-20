@@ -10,7 +10,6 @@ export class NewItem extends Component {
   constructor(props) {
     super(props);
     this.state = { Name: "", BrandName: "", Material: "", Price: "", Amount: "", Description: "", Images: [] }
-
   };
   
   setName(n ) {
