@@ -46,7 +46,11 @@ export class Login extends Component {
         localStorage.setItem('IsLogin', IsLogin);
   
         console.log(localStorage['Token']);
-        console.log(localStorage['IsLogin']);          
+        console.log(localStorage['IsLogin']);    
+        
+        axios.get("http://127.0.0.1:8000/users/", { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`} }
+        ).then(response => {localStorage.setItem("Id", response.data.id); localStorage.setItem("IsAdmin", response.data.is_admin); localStorage.setItem("IsLogin", true)}
+        )
           $.ajax({
               type: "get",
               url: "http://127.0.0.1:8000/orders/",
@@ -63,6 +67,9 @@ export class Login extends Component {
                 document.location.reload();
               }
             });
+        },
+        error: function (error) {
+          alert('No active account found with the given credentials!');
         }
     });
     

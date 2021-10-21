@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './style/register.css'
 import 'axios'
 import axios from 'axios';
+import swal from "sweetalert";
 
 export class Register extends Component {
   static displayName = Register.name;
@@ -54,7 +55,19 @@ export class Register extends Component {
         "city":  this.state.City,
         "street":  this.state.Street,
         "phone":  this.state.Phone
-    });
+    }).then(function(response) {
+      swal({
+        title: "Your order has been accepted!",
+        icon: "success",
+        text: "We have sent a letter to your mail. You must confirm your actions to be able to log in our store.",
+        button: 'OK',
+      }).then(function(isConfirm) {
+        if (isConfirm) {
+          window.location.href = "/login";
+        } 
+      });
+      
+    })
 }
 
 
