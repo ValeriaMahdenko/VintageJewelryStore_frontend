@@ -143,7 +143,7 @@ export class Home extends Component {
           console.log(response);
           swal({
             title: "Error",
-            text: "Not enough units of this product",
+            text: "Error",
             icon: "error",
             button: "Try again"
           });

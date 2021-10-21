@@ -115,7 +115,7 @@ AddItem(e){
             <textarea id="description" name="description" value={this.state.Description} onChange={e=> this.setDescription(e.target.value)} placeholder="Description" required></textarea>
 
             <p>
-                Please, upload images (max 3):
+                Please, upload images:
                 <input type="file" id="files" name="dataimage" size="40"  accept=".jpg, .jpeg, .png"  onChange={e=> this.setImages(e.target.value)} multiple/>
             </p>
 

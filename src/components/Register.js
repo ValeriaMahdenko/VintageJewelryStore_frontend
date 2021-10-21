@@ -57,7 +57,7 @@ export class Register extends Component {
         "phone":  this.state.Phone
     }).then(function(response) {
       swal({
-        title: "Your order has been accepted!",
+        title: "Success!",
         icon: "success",
         text: "We have sent a letter to your mail. You must confirm your actions to be able to log in our store.",
         button: 'OK',
