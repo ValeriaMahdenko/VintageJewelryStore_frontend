@@ -30,9 +30,12 @@ export class NavMenu extends Component {
                 
                 {
                 localStorage["IsLogin"] ? <div class="head"> 
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/cart">Cart</NavLink>
-                </NavItem>
+                {
+                  localStorage['IsAdmin'] === "false" &&
+                  <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/cart">Cart</NavLink>
+                  </NavItem>
+                }
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/account">Account</NavLink>
                 </NavItem>

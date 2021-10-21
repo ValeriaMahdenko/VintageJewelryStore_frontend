@@ -21,9 +21,8 @@ export class Home extends Component {
     };
   }
 
-
   componentDidMount() {
-
+    console.log(localStorage['IsAdmin'])
     if(localStorage['IsLogin'] && localStorage['IdOrder']){
       console.log("yes")
       axios.get(`http://127.0.0.1:8000/orders/${localStorage["IdOrder"]}/`, { headers: {"Authorization" : `Bearer ${localStorage["Token"]}`} }
